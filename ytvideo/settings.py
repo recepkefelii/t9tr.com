@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wo-0*s$3cg60xb3m6azow@&rhwdoo+zd9b!4t)78je-pq+zf!v'
+SECRET_KEY = 'your key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost','t9tr.com']
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,6 +59,18 @@ MIDDLEWARE = [
 CELERY_IMPORTS = [
     'api.tasks',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '25/day',
+    }
+}
+
+
+
 
 ROOT_URLCONF = 'ytvideo.urls'
 
@@ -130,7 +143,7 @@ USE_TZ = True
 
 
 
-STATIC_URL = '/static/'
+STATIC_URL = '/media/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -140,18 +153,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 # celery setting.
 CELERY_CACHE_BACKEND = 'default'
 
-# django setting.
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
